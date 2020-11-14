@@ -28,7 +28,9 @@ defaults.set('scale', {
 		tickMarkLength: 10,
 		offsetGridLines: false,
 		borderDash: [],
-		borderDashOffset: 0.0
+		borderDashOffset: 0.0,
+		linesBetweenTicks: 0,
+		linesBetweenTicksWidth: 0.5,
 	},
 
 	// scale label
@@ -1234,6 +1236,7 @@ export default class Scale extends Element {
 			x2 = chartArea.right;
 		}
 
+		let previousLineValue = -1;
 		for (i = 0; i < ticksLength; ++i) {
 			context = this.getContext(i);
 
@@ -1249,28 +1252,43 @@ export default class Scale extends Element {
 				continue;
 			}
 
-			alignedLineValue = _alignPixel(chart, lineValue, lineWidth);
-
-			if (isHorizontal) {
-				tx1 = tx2 = x1 = x2 = alignedLineValue;
-			} else {
-				ty1 = ty2 = y1 = y2 = alignedLineValue;
+			let lineDistance = 0;
+			if (gridLines.linesBetweenTicks !== 0) {
+				lineDistance = (lineValue - previousLineValue) / (gridLines.linesBetweenTicks + 1);
 			}
+			let j;
+			// Store all gridlines in the items array
+			for (j = 0; j <= gridLines.linesBetweenTicks; ++j) {
+				const calculatedLineValue = lineValue - (j * lineDistance);
+				const selectedLineWidth = (j >= 1 ? gridLines.linesBetweenTicksWidth : lineWidth);
 
-			items.push({
-				tx1,
-				ty1,
-				tx2,
-				ty2,
-				x1,
-				y1,
-				x2,
-				y2,
-				width: lineWidth,
-				color: lineColor,
-				borderDash,
-				borderDashOffset,
-			});
+				alignedLineValue = _alignPixel(chart, calculatedLineValue, selectedLineWidth);
+
+				if (isHorizontal) {
+					tx1 = tx2 = x1 = x2 = alignedLineValue;
+				} else {
+					ty1 = ty2 = y1 = y2 = alignedLineValue;
+				}
+
+				items.push({
+					tx1,
+					ty1,
+					tx2,
+					ty2,
+					x1,
+					y1,
+					x2,
+					y2,
+					width: selectedLineWidth,
+					color: lineColor,
+					borderDash,
+					borderDashOffset,
+				});
+				if (previousLineValue === -1) {
+					break;
+				}
+			}
+			previousLineValue = lineValue;
 		}
 
 		me._ticksLength = ticksLength;

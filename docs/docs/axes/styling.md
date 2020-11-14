@@ -24,6 +24,9 @@ The grid line configuration is nested under the scale configuration in the `grid
 | `tickMarkLength` | `number` | | | `10` | Length in pixels that the grid lines will draw into the axis area.
 | `offsetGridLines` | `boolean` | | | `false` | If true, grid lines will be shifted to be between labels. This is set to `true` for a bar chart by default.
 | `z` | `number` | | | `0` | z-index of gridline layer. Values &lt;= 0 are drawn under datasets, &gt; 0 on top.
+| `linesBetweenTicks` | `number` | | | `0` | Number of lines between the labeled gridlines
+| `linesBetweenTicksWidth` | `number` | | | `0.5` | Stroke width of the `linesBetweenTicks` gridlines
+
 
 The scriptable context has the following form:
 
