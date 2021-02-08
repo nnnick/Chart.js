@@ -27,21 +27,29 @@ describe('Chart.helpers.options', function() {
 		it('should support number values', function() {
 			expect(toTRBLCorners(4)).toEqual(
 				{topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4});
-			expect(toTRBLCorners(4.5)).toEqual(
+			expect(toTRBLCorners(4.5), 100).toEqual(
 				{topLeft: 4.5, topRight: 4.5, bottomLeft: 4.5, bottomRight: 4.5});
 		});
 		it('should support string values', function() {
-			expect(toTRBLCorners('4')).toEqual(
+			expect(toTRBLCorners('4', 100)).toEqual(
 				{topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4});
-			expect(toTRBLCorners('4.5')).toEqual(
+			expect(toTRBLCorners('4.5', 100)).toEqual(
 				{topLeft: 4.5, topRight: 4.5, bottomLeft: 4.5, bottomRight: 4.5});
+			expect(toTRBLCorners('4.5px', 100)).toEqual(
+				{topLeft: 4.5, topRight: 4.5, bottomLeft: 4.5, bottomRight: 4.5});
+			expect(toTRBLCorners('4.5%', 100)).toEqual(
+				{topLeft: 4.5, topRight: 4.5, bottomLeft: 4.5, bottomRight: 4.5});
+			expect(toTRBLCorners('4.666%', 50)).toEqual(
+				{topLeft: 2.333, topRight: 2.333, bottomLeft: 2.333, bottomRight: 2.333});
 		});
 		it('should support object values', function() {
 			expect(toTRBLCorners({topLeft: 1, topRight: 2, bottomLeft: 3, bottomRight: 4})).toEqual(
 				{topLeft: 1, topRight: 2, bottomLeft: 3, bottomRight: 4});
-			expect(toTRBLCorners({topLeft: 1.5, topRight: 2.5, bottomLeft: 3.5, bottomRight: 4.5})).toEqual(
+			expect(toTRBLCorners({topLeft: 1.5, topRight: 2.5, bottomLeft: 3.5, bottomRight: 4.5}, 100)).toEqual(
 				{topLeft: 1.5, topRight: 2.5, bottomLeft: 3.5, bottomRight: 4.5});
-			expect(toTRBLCorners({topLeft: '1', topRight: '2', bottomLeft: '3', bottomRight: '4'})).toEqual(
+			expect(toTRBLCorners({topLeft: 1.5, topRight: 2.5, bottomLeft: '3.5', bottomRight: '4.5'}, 100)).toEqual(
+				{topLeft: 1.5, topRight: 2.5, bottomLeft: 3.5, bottomRight: 4.5});
+			expect(toTRBLCorners({topLeft: '1', topRight: '2', bottomLeft: '3', bottomRight: '4'}, 100)).toEqual(
 				{topLeft: 1, topRight: 2, bottomLeft: 3, bottomRight: 4});
 		});
 		it('should fallback to 0 for invalid values', function() {

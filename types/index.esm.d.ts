@@ -1825,17 +1825,17 @@ export interface BarOptions extends CommonElementOptions {
 	borderSkipped: 'start' | 'end' | 'left' | 'right' | 'bottom' | 'top';
 
 	/**
-	 * Border radius
+	 * Border radius like css. use number/string to px, 5 => '5' => '5px' => 5px; use string to percentage, '50%' => 50%
 	 * @default 0
 	 */
-	borderRadius: number | BorderRadius;
+	borderRadius: number| string | BorderRadius;
 }
 
 export interface BorderRadius {
-	topLeft: number;
-	topRight: number;
-	bottomLeft: number;
-	bottomRight: number;
+	topLeft: number | string;
+	topRight: number | string;
+	bottomLeft: number | string;
+	bottomRight: number | string;
 }
 
 export interface BarHoverOptions extends CommonHoverOptions {
