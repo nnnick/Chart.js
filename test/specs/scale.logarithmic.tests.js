@@ -590,6 +590,7 @@ describe('Logarithmic Scale tests', function() {
             type: 'logarithmic',
             reverse: true,
             ticks: {
+              autoSkip: false,
               callback: function(value) {
                 return value;
               }
@@ -600,7 +601,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([70, 60, 50, 40, 30, 20, 15, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(getLabels(scale)).toEqual([80, 70, 60, 50, 40, 30, 20, 15, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(scale.start).toEqual(80);
     expect(scale.end).toEqual(1);
   });
