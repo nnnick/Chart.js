@@ -50,11 +50,11 @@ function generateTicks(generationOptions, {min, max}) {
   const start = Math.round((min - base) * precision) / precision;
   const offset = Math.floor((min - base) / stepSize / 10) * stepSize * 10;
   let significand = Math.floor((start - offset) / Math.pow(10, exp));
-  let value = Math.round((base + offset + significand * Math.pow(10, exp)) * precision) / precision;
+  let value = finiteOrDefault(generationOptions.min, Math.round((base + offset + significand * Math.pow(10, exp)) * precision) / precision);
   while (value < max) {
     ticks.push({value, major: isMajor(value), significand});
     if (significand >= 10) {
-      significand = significand === 10 ? 11 : significand === 11 ? 12 : significand < 15 ? 15 : 20;
+      significand = significand < 15 ? 15 : 20;
     } else {
       significand++;
     }

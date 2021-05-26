@@ -67,7 +67,7 @@ const formatters = {
       return '0';
     }
     const remain = ticks[index].significand || (tickValue / (Math.pow(10, Math.floor(log10(tickValue)))));
-    if ([1, 2, 5, 10, 15].includes(remain) || index > 0.8 * ticks.length) {
+    if ([1, 2, 3, 5, 10, 15].includes(remain) || index > 0.8 * ticks.length) {
       return formatters.numeric.call(this, tickValue, index, ticks);
     }
     return '';

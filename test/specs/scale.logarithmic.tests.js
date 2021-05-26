@@ -539,7 +539,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 40, 50, 60, 70, 80]);
+    expect(getLabels(scale)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50, 60, 70, 80]);
     expect(scale.start).toEqual(1);
     expect(scale.end).toEqual(80);
   });
@@ -569,7 +569,7 @@ describe('Logarithmic Scale tests', function() {
 
     var scale = chart.scales.y;
     // Counts down because the lines are drawn top to bottom
-    expect(getLabels(scale)).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 30]);
+    expect(getLabels(scale)).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30]);
     expect(scale.start).toEqual(0.1);
     expect(scale.end).toEqual(30);
   });
@@ -601,7 +601,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([80, 70, 60, 50, 40, 30, 20, 15, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(getLabels(scale)).toEqual([80, 70, 60, 50, 40, 30, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(scale.start).toEqual(80);
     expect(scale.end).toEqual(1);
   });
@@ -631,7 +631,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([30, 20, 15, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(getLabels(scale)).toEqual([30, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(scale.start).toEqual(30);
     expect(scale.end).toEqual(1);
   });
@@ -657,7 +657,7 @@ describe('Logarithmic Scale tests', function() {
       }
     });
 
-    expect(getLabels(chart.scales.y)).toEqual(['1', '2', '', '', '5', '', '', '', '', '10', '', '', '15', '20', '', '', '50', '60', '70', '80']);
+    expect(getLabels(chart.scales.y)).toEqual(['1', '2', '3', '', '5', '', '', '', '', '10', '15', '20', '30', '', '50', '60', '70', '80']);
   });
 
   it('should build labels using the user supplied callback', function() {
