@@ -59,6 +59,28 @@ module.exports = [
     },
   },
 
+  // CJS builds
+  // dist/chart.cjs
+  {
+    input, // for backwards-compatibility. should change to inputESM at 4.0 (and possibly rename that variable/file)
+    plugins: [
+      json(),
+      resolve(),
+      cleanup({
+        sourcemap: true
+      }),
+      analyze({summaryOnly: true})
+    ],
+    output: {
+      name: 'Chart',
+      file: 'dist/chart.cjs',
+      exports: 'default', // for backwards-compatibility. should change to 'named' with 4.0
+      banner,
+      format: 'cjs',
+      indent: false,
+    },
+  },
+
   // ES6 builds
   // dist/chart.esm.js
   // helpers/*.js

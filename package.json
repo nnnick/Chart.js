@@ -6,7 +6,7 @@
   "license": "MIT",
   "jsdelivr": "dist/chart.min.js",
   "unpkg": "dist/chart.min.js",
-  "main": "dist/chart.js",
+  "main": "dist/chart.cjs",
   "module": "dist/chart.esm.js",
   "types": "types/index.esm.d.ts",
   "keywords": [
