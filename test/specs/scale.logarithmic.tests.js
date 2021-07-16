@@ -131,11 +131,11 @@ describe('Logarithmic Scale tests', function() {
     });
 
     expect(chart.scales.y).not.toEqual(undefined); // must construct
-    expect(chart.scales.y.min).toBe(10);
+    expect(chart.scales.y.min).toBe(40);
     expect(chart.scales.y.max).toBe(1000);
 
     expect(chart.scales.y1).not.toEqual(undefined); // must construct
-    expect(chart.scales.y1.min).toBe(1);
+    expect(chart.scales.y1.min).toBe(5);
     expect(chart.scales.y1.max).toBe(5000);
 
     expect(chart.scales.y2).not.toEqual(undefined); // must construct
@@ -189,7 +189,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     expect(chart.scales.y1).not.toEqual(undefined); // must construct
-    expect(chart.scales.y1.min).toBe(1);
+    expect(chart.scales.y1.min).toBe(5);
     expect(chart.scales.y1.max).toBe(5000);
 
     expect(chart.scales.y2).not.toEqual(undefined); // must construct
@@ -271,11 +271,11 @@ describe('Logarithmic Scale tests', function() {
       }
     });
 
-    expect(chart.scales.x.min).toBe(1);
+    expect(chart.scales.x.min).toBe(2);
     expect(chart.scales.x.max).toBe(100);
 
-    expect(chart.scales.y.min).toBe(1);
-    expect(chart.scales.y.max).toBe(200);
+    expect(chart.scales.y.min).toBe(6);
+    expect(chart.scales.y.max).toBe(150);
   });
 
   it('should correctly determine the max & min for scatter data when 0 values are present', function() {
@@ -417,8 +417,8 @@ describe('Logarithmic Scale tests', function() {
     chart.data.datasets[0].data = [0.15, 0.15];
     chart.update();
 
-    expect(chart.scales.y.min).toBe(0.01);
-    expect(chart.scales.y.max).toBe(1);
+    expect(chart.scales.y.min).toBe(0.1);
+    expect(chart.scales.y.max).toBe(0.15);
   });
 
   it('should use the min and max options', function() {
@@ -528,6 +528,7 @@ describe('Logarithmic Scale tests', function() {
           y: {
             type: 'logarithmic',
             ticks: {
+              autoSkip: false,
               callback: function(value) {
                 return value;
               }
@@ -538,7 +539,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80]);
+    expect(getLabels(scale)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50, 60, 70, 80]);
     expect(scale.start).toEqual(1);
     expect(scale.end).toEqual(80);
   });
@@ -568,7 +569,7 @@ describe('Logarithmic Scale tests', function() {
 
     var scale = chart.scales.y;
     // Counts down because the lines are drawn top to bottom
-    expect(getLabels(scale)).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30]);
+    expect(getLabels(scale)).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30]);
     expect(scale.start).toEqual(0.1);
     expect(scale.end).toEqual(30);
   });
@@ -589,6 +590,7 @@ describe('Logarithmic Scale tests', function() {
             type: 'logarithmic',
             reverse: true,
             ticks: {
+              autoSkip: false,
               callback: function(value) {
                 return value;
               }
@@ -599,7 +601,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(getLabels(scale)).toEqual([80, 70, 60, 50, 40, 30, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(scale.start).toEqual(80);
     expect(scale.end).toEqual(1);
   });
@@ -629,7 +631,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     var scale = chart.scales.y;
-    expect(getLabels(scale)).toEqual([30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(getLabels(scale)).toEqual([30, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(scale.start).toEqual(30);
     expect(scale.end).toEqual(1);
   });
@@ -646,13 +648,16 @@ describe('Logarithmic Scale tests', function() {
       options: {
         scales: {
           y: {
-            type: 'logarithmic'
+            type: 'logarithmic',
+            ticks: {
+              autoSkip: false
+            }
           }
         }
       }
     });
 
-    expect(getLabels(chart.scales.y)).toEqual(['1', '2', '', '', '5', '', '', '', '', '10', '20', '', '', '50', '', '', '']);
+    expect(getLabels(chart.scales.y)).toEqual(['1', '2', '3', '', '5', '', '', '', '', '10', '15', '20', '30', '', '50', '60', '70', '80']);
   });
 
   it('should build labels using the user supplied callback', function() {
@@ -679,7 +684,7 @@ describe('Logarithmic Scale tests', function() {
     });
 
     // Just the index
-    expect(getLabels(chart.scales.y)).toEqual(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']);
+    expect(getLabels(chart.scales.y)).toEqual(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']);
   });
 
   it('should correctly get the correct label for a data item', function() {

@@ -5,10 +5,33 @@ import Scale from '../core/core.scale';
 import LinearScaleBase from './scale.linearbase';
 import Ticks from '../core/core.ticks';
 
+const log10Floor = v => Math.floor(log10(v));
+const changeExponent = (v, m) => Math.pow(10, log10Floor(v) + m);
+
 function isMajor(tickVal) {
-  const remain = tickVal / (Math.pow(10, Math.floor(log10(tickVal))));
+  const remain = tickVal / (Math.pow(10, log10Floor(tickVal)));
   return remain === 1;
 }
+
+function steps(min, max, rangeExp) {
+  const rangeStep = Math.pow(10, rangeExp);
+  const start = Math.floor(min / rangeStep);
+  const end = Math.ceil(max / rangeStep);
+  return end - start;
+}
+
+function startExp(min, max) {
+  const range = max - min;
+  let rangeExp = log10Floor(range);
+  while (steps(min, max, rangeExp) > 10) {
+    rangeExp++;
+  }
+  while (steps(min, max, rangeExp) < 10) {
+    rangeExp--;
+  }
+  return Math.min(rangeExp, log10Floor(min));
+}
+
 
 /**
  * Generate a set of logarithmic ticks
@@ -16,30 +39,34 @@ function isMajor(tickVal) {
  * @param dataRange the range of the data
  * @returns {object[]} array of tick objects
  */
-function generateTicks(generationOptions, dataRange) {
-  const endExp = Math.floor(log10(dataRange.max));
-  const endSignificand = Math.ceil(dataRange.max / Math.pow(10, endExp));
+function generateTicks(generationOptions, {min, max}) {
+  min = finiteOrDefault(generationOptions.min, min);
   const ticks = [];
-  let tickVal = finiteOrDefault(generationOptions.min, Math.pow(10, Math.floor(log10(dataRange.min))));
-  let exp = Math.floor(log10(tickVal));
-  let significand = Math.floor(tickVal / Math.pow(10, exp));
+  const minExp = log10Floor(min);
+  let exp = startExp(min, max);
   let precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
-
-  do {
-    ticks.push({value: tickVal, major: isMajor(tickVal)});
-
-    ++significand;
-    if (significand === 10) {
-      significand = 1;
-      ++exp;
+  const stepSize = Math.pow(10, exp);
+  const base = minExp > exp ? Math.pow(10, minExp) : 0;
+  const start = Math.round((min - base) * precision) / precision;
+  const offset = Math.floor((min - base) / stepSize / 10) * stepSize * 10;
+  let significand = Math.floor((start - offset) / Math.pow(10, exp));
+  let value = finiteOrDefault(generationOptions.min, Math.round((base + offset + significand * Math.pow(10, exp)) * precision) / precision);
+  while (value < max) {
+    ticks.push({value, major: isMajor(value), significand});
+    if (significand >= 10) {
+      significand = significand < 15 ? 15 : 20;
+    } else {
+      significand++;
+    }
+    if (significand >= 20) {
+      exp++;
+      significand = 2;
       precision = exp >= 0 ? 1 : precision;
     }
-
-    tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
-  } while (exp < endExp || (exp === endExp && significand < endSignificand));
-
-  const lastTick = finiteOrDefault(generationOptions.max, tickVal);
-  ticks.push({value: lastTick, major: isMajor(tickVal)});
+    value = Math.round((base + offset + significand * Math.pow(10, exp)) * precision) / precision;
+  }
+  const lastTick = finiteOrDefault(generationOptions.max, value);
+  ticks.push({value: lastTick, major: isMajor(lastTick), significand});
 
   return ticks;
 }
@@ -78,6 +105,12 @@ export default class LogarithmicScale extends Scale {
       me._zero = true;
     }
 
+    // if data has `0` in it or `beginAtZero` is true, min (non zero) value is at bottom
+    // of scale, and it does not equal suggestedMin, lower the min bound by one exp.
+    if (me._zero && me.min !== me._suggestedMin && !isFinite(me._userMin)) {
+      me.min = min === changeExponent(me.min, 0) ? changeExponent(me.min, -1) : changeExponent(me.min, 0);
+    }
+
     me.handleTickRangeOptions();
   }
 
@@ -89,28 +122,23 @@ export default class LogarithmicScale extends Scale {
 
     const setMin = v => (min = minDefined ? min : v);
     const setMax = v => (max = maxDefined ? max : v);
-    const exp = (v, m) => Math.pow(10, Math.floor(log10(v)) + m);
 
     if (min === max) {
       if (min <= 0) { // includes null
         setMin(1);
         setMax(10);
       } else {
-        setMin(exp(min, -1));
-        setMax(exp(max, +1));
+        setMin(changeExponent(min, -1));
+        setMax(changeExponent(max, +1));
       }
     }
     if (min <= 0) {
-      setMin(exp(max, -1));
+      setMin(changeExponent(max, -1));
     }
     if (max <= 0) {
-      setMax(exp(min, +1));
+      setMax(changeExponent(min, +1));
     }
-    // if data has `0` in it or `beginAtZero` is true, min (non zero) value is at bottom
-    // of scale, and it does not equal suggestedMin, lower the min bound by one exp.
-    if (me._zero && me.min !== me._suggestedMin && min === exp(me.min, 0)) {
-      setMin(exp(min, -1));
-    }
+
     me.min = min;
     me.max = max;
   }

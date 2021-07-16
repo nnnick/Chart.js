@@ -66,8 +66,8 @@ const formatters = {
     if (tickValue === 0) {
       return '0';
     }
-    const remain = tickValue / (Math.pow(10, Math.floor(log10(tickValue))));
-    if (remain === 1 || remain === 2 || remain === 5) {
+    const remain = ticks[index].significand || (tickValue / (Math.pow(10, Math.floor(log10(tickValue)))));
+    if ([1, 2, 3, 5, 10, 15].includes(remain) || index > 0.8 * ticks.length) {
       return formatters.numeric.call(this, tickValue, index, ticks);
     }
     return '';

@@ -71,6 +71,7 @@ describe('Test tick generators', function() {
             min: 0.1,
             max: 1,
             ticks: {
+              autoSkip: false,
               callback: function(value) {
                 return value.toString();
               }
@@ -81,6 +82,7 @@ describe('Test tick generators', function() {
             min: 0.1,
             max: 1,
             ticks: {
+              autoSkip: false,
               callback: function(value) {
                 return value.toString();
               }
@@ -93,8 +95,8 @@ describe('Test tick generators', function() {
     var xLabels = getLabels(chart.scales.x);
     var yLabels = getLabels(chart.scales.y);
 
-    expect(xLabels).toEqual(['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1']);
-    expect(yLabels).toEqual(['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1']);
+    expect(xLabels).toEqual(['0.1', '0.11', '0.12', '0.13', '0.14', '0.15', '0.16', '0.17', '0.18', '0.19', '0.2', '0.25', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1']);
+    expect(yLabels).toEqual(['0.1', '0.11', '0.12', '0.13', '0.14', '0.15', '0.16', '0.17', '0.18', '0.19', '0.2', '0.25', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1']);
   });
 
   describe('formatters.numeric', function() {
